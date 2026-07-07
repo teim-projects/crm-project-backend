@@ -120,13 +120,21 @@ class PurchaseOrderHistoryViewSet(ReadOnlyModelViewSet):
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.contrib.staticfiles import finders
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+except Exception:  # pragma: no cover - depends on OS native libs
+    HTML = None
 from decimal import Decimal
 from .models import PurchaseOrder
 from .utils import format_amount_in_words
 
 
 def purchase_order_pdf(request, pk):
+    if HTML is None:
+        return HttpResponse(
+            "PDF generation is unavailable on this machine. Install WeasyPrint system libraries first.",
+            status=503,
+        )
 
     po = PurchaseOrder.objects.get(pk=pk)
     products = po.products.all()
@@ -428,12 +436,20 @@ class DeliveryChallanViewSet(ModelViewSet):
 
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+except Exception:  # pragma: no cover - depends on OS native libs
+    HTML = None
 
 from .models import DeliveryChallan, PurchaseOrderProduct
 
 
 def delivery_challan_pdf(request, pk):
+    if HTML is None:
+        return HttpResponse(
+            "PDF generation is unavailable on this machine. Install WeasyPrint system libraries first.",
+            status=503,
+        )
 
     dc = DeliveryChallan.objects.select_related(
         "material_issue",

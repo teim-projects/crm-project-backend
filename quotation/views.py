@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
 import logging
 from django.template.loader import render_to_string
-from weasyprint import HTML
 from decimal import Decimal
 from .models import Quotation
 # from rest_framework.decorators import api_view, authentication_classes, permission_classes

@@ -128,12 +128,21 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from weasyprint import HTML
 from decimal import Decimal
 from .models import Invoice
 from num2words import num2words
 
+try:
+    from weasyprint import HTML
+except Exception:  # pragma: no cover - depends on OS native libs
+    HTML = None
+
 def invoice_pdf(request, pk):
+    if HTML is None:
+        return HttpResponse(
+            "PDF generation is unavailable on this machine. Install WeasyPrint system libraries first.",
+            status=503,
+        )
 
     invoice = Invoice.objects.get(pk=pk)
 

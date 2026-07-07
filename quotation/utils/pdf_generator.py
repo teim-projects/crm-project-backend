@@ -1,9 +1,13 @@
 # quotation/utils/pdf_generator.py
 from django.template.loader import render_to_string
-from weasyprint import HTML
 from decimal import Decimal
 from django.conf import settings
 import logging
+
+try:
+    from weasyprint import HTML
+except Exception:  # pragma: no cover - depends on OS native libs
+    HTML = None
 
 logger = logging.getLogger(__name__)
 
@@ -161,6 +165,10 @@ def generate_quotation_pdf(quotation, version, base_url=None):
     Generate quotation PDF using WeasyPrint with HTML template (existing design).
     """
     try:
+        if HTML is None:
+            raise RuntimeError(
+                "PDF generation is unavailable on this machine. Install WeasyPrint system libraries first."
+            )
         context = _build_quotation_pdf_context(quotation, version)
         html_string = render_to_string('pdf/quotation.html', context)
         pdf = HTML(
@@ -178,6 +186,10 @@ def generate_quotation_print_pdf(quotation, version, base_url=None):
     New WeasyPrint quotation PDF (invoice-style layout).
     Design stage: uses a dummy items table. Existing /pdf/ endpoints unchanged.
     """
+    if HTML is None:
+        raise RuntimeError(
+            "PDF generation is unavailable on this machine. Install WeasyPrint system libraries first."
+        )
     dummy_rows = [
         {
             'sr': 1,

@@ -172,23 +172,20 @@ AUTHENTICATION_BACKENDS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-
-        # Prefer MYSQL_* (Docker/UAT), fallback to DB_* (local dev)
-        "NAME": os.getenv("MYSQL_DATABASE") or os.getenv("DB_NAME"),
-        "USER": os.getenv("MYSQL_USER") or os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("MYSQL_PASSWORD") or os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("MYSQL_HOST") or os.getenv("DB_HOST") or "db",
-        "PORT": os.getenv("MYSQL_PORT") or os.getenv("DB_PORT") or "3306",
+        "NAME": "krishna_air_db",
+        "USER": "root",
+        "PASSWORD": "",          # XAMPP default password is blank
+        "HOST": "127.0.0.1",
+        "PORT": "3306",
     }
 }
-
 
 
 # Redis cache settings
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
