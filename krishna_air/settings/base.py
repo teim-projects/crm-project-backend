@@ -172,7 +172,7 @@ AUTHENTICATION_BACKENDS = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "krishna_air_db",
+        "NAME": "k_crm_db",
         "USER": "root",
         "PASSWORD": "",          # XAMPP default password is blank
         "HOST": "127.0.0.1",
